@@ -12,10 +12,9 @@ nav_order: 1
 ## Overview
 {: .no_toc}
 
-[`linear_mixed_model.m`](../../../code/statistics/linear_mixed_model/linear_mixed_model.html) in `code/statistics` fits one-way or two-way linear mixed models with an optional grouping variable to data.
+[`linear_mixed_model.m`](../../../code/statistics/linear_mixed_model/linear_mixed_model.html) fits one-way or two-way linear mixed models to data with an optional grouping variable.
 
-
-`linear_mixed_model.m` will create simple swarmcharts to help you visualize your data but it doesn't show statistical effects.
+`linear_mixed_model.m` has an option to create simple [swarmcharts](https://www.mathworks.com/help/matlab/ref/swarmchart.html) that illustrate the data but the plots do not show statistical effects.
 
 [`fig_jitter.m`](../../../code/figures/fig_jitter/fig_jitter.m) can be used in combination with `linear_mixed_model.m` to make publication-quality figures.
 
