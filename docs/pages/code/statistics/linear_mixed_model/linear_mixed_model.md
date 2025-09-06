@@ -11,9 +11,11 @@ nav_order: 1
 
 ## Overview
 
-This function uses [fitlme](https://www.mathworks.com/help/stats/fitlme.html) to fit one-way or two-way linear mixed models with an optional grouping variable to data.
+This function uses [fitlme](https://www.mathworks.com/help/stats/fitlme.html) to fit one-way or two-way linear mixed models to data with with an optional grouping variable.
 
-Models can be of the form:
+This is a useful approach when the data exhibit nesting. For example, the data include values measured from several specimens from the same person.
+
+Models can be of the form (using [Wilkinson notation](https://www.mathworks.com/help/stats/wilkinson-notation.html)):
 + y ~ factor_1
 + y ~ factor_1 + (1 \| grouping)
 + y ~ factor_1 + factor_2 + (factor_1 * factor_2)
@@ -22,6 +24,10 @@ Models can be of the form:
 Main effects are dervied using [anova](https://www.mathworks.com/help/stats/linearmixedmodel.anova.html)
 
 Post-hoc tests are calculated using [coefTest](https://www.mathworks.com/help/stats/linearmixedmodel.coeftest.html) and then corrected using the [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method) method.
+
+## Examples
+
++ [Linear mixed model](../../../demos/statistics/linear_mixed_model/linear_mixed_model.html)
 
 
 ## Function arguments
@@ -61,13 +67,9 @@ function stats = linear_mixed_model(t, data_label, f1_label, options);
 | --- | --- | --- |
 | stats | | Structure |
 |  | main_effects | A main effects table, derived from [anova](https://www.mathworks.com/help/stats/linearmixedmodel.anova.html) |
-|  | post_hoc | A table showing post-hoc tests with Holm-Bonferonni corrections |
-|  | model_string | A string with the model that was tested in Wilkinson notation |
+|  | post_hoc | A table showing post-hoc tests corrected for multiple comparisons using the [Holm-Bonferroni](https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method) method |
+|  | model_string | A string with the model that was tested in [Wilkinson notation](https://www.mathworks.com/help/stats/wilkinson-notation.html) |
 |  | main_effects_string | A string summarizing the main effects |
 
-
-## Examples
-
-+ [Linear mixed model demos](../../../demos/statistics/linear_mixed_model/linear_mixed_model.html)
 
 

@@ -208,11 +208,11 @@ function z = expand_out_axes_properties(z, panels_wide, panels_high, mode)
             case (panels_high)
                 z_temp = [];
                 for i = 1 : panels_high
-                    for j = 1 : panels_wide
-                        z_temp = [z_temp z(i)];
+                    for j = panels_wide
+                        z_temp = [z_temp z(i)]
                     end
                 end
-                z = z_temp;
+                z = z_temp
         end
     end
 
