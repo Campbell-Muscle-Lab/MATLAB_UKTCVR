@@ -8,7 +8,7 @@ function jitter_data = table_to_jitter_format( ...
         options.f2_label (1,1) string = ""
         options.f1_values (1,:) string = ""
         options.f2_values (1,:) string = ""
-        options.grouping_label (1,1) string
+        options.grouping_label (1,1) string = ""
     end
 
     % Code
@@ -51,7 +51,7 @@ function jitter_data = table_to_jitter_format( ...
             % One factor only
             vi = find(t.(f1_label) == options.f1_values(f1_i));
             jitter_data(1).points{f1_i} = t.(data_label)(vi);
-            if (~isempty(options.grouping_label))
+            if (options.grouping_label ~= "")
                 jitter_data(1).group{f1_i} = t.(options.grouping_label)(vi);
             end
         else

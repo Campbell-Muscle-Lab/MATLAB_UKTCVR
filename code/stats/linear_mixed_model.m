@@ -148,7 +148,7 @@ function stats = linear_mixed_model(t, data_label, f1_label, options);
     % Sort table
     post_hoc = sortrows(post_hoc, 'p_raw');
 
-    mult = size(post_hoc, 1)
+    mult = size(post_hoc, 1);
     for i = 1 : size(post_hoc, 1)
         post_hoc.p_corrected(i) = mult * post_hoc.p_raw(i);
         mult = mult - 1;

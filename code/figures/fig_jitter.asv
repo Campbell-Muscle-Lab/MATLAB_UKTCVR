@@ -27,7 +27,7 @@ function fig_jitter(t, data_label, f1_label, options)
         options.y_ticks (:,:) double = []
 
         options.super_plot logical = true
-        options.super_plot_size_offset double = 60;
+        options.super_plot_size_offset double = 40;
         options.super_plot_XJitterWidth = 0.2;
         options.super_plot_alpha = 0.7;
 
@@ -274,11 +274,12 @@ function fig_jitter(t, data_label, f1_label, options)
     end
 
     % Work out whether we want to draw y-axis from 0
-    if (isempty(options.y_ticks)) && ...
-            ((options.draw_y_from_zero) || (min(y) < (0.8 * max(y))))
+    if (options.draw_y_from_zero) || (min(y) < (0.8 * max(y)))
         y_lim = ylim;
-        options.y_ticks = [0 y_lim(end)];
+        y_ticks = [0 y_lim(end)];
     end
+
+    if (isempty(options.y_ticks))
 
     % Now format
     axes_data = improve_axes( ...
@@ -309,7 +310,7 @@ function fig_jitter(t, data_label, f1_label, options)
         pht = options.post_hoc_table;
 
         % Find signifcant entries
-        vi = find(pht.p_corrected < 0.05);
+        vi = find(pht.p_corrected < 0.05)
         for i = 1 : numel(vi)
             vi_a = find(f1_ticks.f1f2_labels == pht.varname_1(i));
             vi_b = find(f1_ticks.f1f2_labels == pht.varname_2(i));
@@ -320,5 +321,5 @@ function fig_jitter(t, data_label, f1_label, options)
 
         stat_lines(pht, axes_data, ...
             font_size = options.post_hoc_font_size, ...
-            rel_y_spacing = options.post_hoc_rel_y_spacing);
+            rel_y_spacing = options.post_hoc_rel_y_spacing)
     end
