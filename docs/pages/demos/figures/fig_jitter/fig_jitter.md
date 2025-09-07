@@ -7,7 +7,7 @@ grand_parent: Demos
 nav_order: 2
 ---
 
-# Fig_jitter 
+# Fig_jitter
 
 [`fig_jitter.m`](../../../code/figures/fig_jitter/fig_jitter.html) creates figures that show raw data for one and two-way experimental designs with an optional grouping variable.subplots with well-defined sizes and positions in a figure. It can be useful for creating publication quality figures.
 
