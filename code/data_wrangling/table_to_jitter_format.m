@@ -30,10 +30,10 @@ function jitter_data = table_to_jitter_format( ...
     end
 
     % Work out the unique values
-    if (~isempty(options.f1_values))
+    if (options.f1_values == "")
         options.f1_values = unique(t.(f1_label));
-        jitter_data.f1_values = options.f1_values;
     end
+    jitter_data.f1_values = options.f1_values;
 
     if (options.f2_label ~= "")
         if (~isempty(options.f2_values))

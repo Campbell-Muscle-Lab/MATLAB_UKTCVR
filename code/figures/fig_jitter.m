@@ -8,6 +8,10 @@ function fig_jitter(t, data_label, f1_label, options)
 
         options.f2_label (1,1) string = ""
         options.grouping_label (1,1) string = ""
+
+        options.f1_values (1,:) string = ""
+        options.f2_values (1,:) string = ""
+
         options.figure_handle (1,1) double = 1
         options.subplot_handle (1,1) double = 0
         
@@ -41,6 +45,9 @@ function fig_jitter(t, data_label, f1_label, options)
         
         options.f2_font_size = 12
         options.f2_label_rel_pos = -0.5
+
+        options.y_label_rotation (1,1) double = 0
+        options.y_label_offset (1,1) double = []
         
         options.title_string (1,1) string = ""
         options.title_font_size = 12
@@ -85,7 +92,12 @@ function fig_jitter(t, data_label, f1_label, options)
     % Extract the data
     jd = table_to_jitter_format(t, data_label, f1_label, ...
             f2_label = options.f2_label, ...
-            grouping_label = options.grouping_label);
+            grouping_label = options.grouping_label, ...
+            f1_values = options.f1_values, ...
+            f2_values = options.f2_values);
+
+    jd.points
+    jd.f1_values
 
     % Work out number of f1 and f2 categories
     no_of_f1_cats = 0;
@@ -123,14 +135,15 @@ function fig_jitter(t, data_label, f1_label, options)
         for f1_i = 1 : no_of_f1_cats
             try
                 y_temp = jd(f2_i).points{f1_i};
-            catch
-                x_anchor = x_anchor + 1
-                continue;
-            end
-            x = [x ; x_anchor * ones(numel(y_temp), 1)];
-            y = [y ; y_temp];
-            if (options.grouping_label ~= "")
-                g = [g ; jd(f2_i).group{f1_i}];
+            % catch
+            %     x_anchor = x_anchor + 1
+            %     continue;
+            % end
+                x = [x ; x_anchor * ones(numel(y_temp), 1)];
+                y = [y ; y_temp];
+                if (options.grouping_label ~= "")
+                    g = [g ; jd(f2_i).group{f1_i}];
+                end
             end
 
             % And now ticks
@@ -248,8 +261,8 @@ function fig_jitter(t, data_label, f1_label, options)
                     options.marker_size + options.super_plot_size_offset, ...
                     options.symbols(unique_symb(si)), ...
                     'filled', ...
-                    MarkerFaceColor = options.color_map(ci, :), ...
-                    MarkerEdgeColor = edge_colors(ci, :), ...
+                    MarkerFaceColor = options.color_map(unique_cols(ci), :), ...
+                    MarkerEdgeColor = edge_colors(unique_cols(ci), :), ...
                     LineWidth = options.edge_width, ...
                     XJitter = 'density', ...
                     XJitterWidth = options.super_plot_XJitterWidth, ...
@@ -280,8 +293,11 @@ function fig_jitter(t, data_label, f1_label, options)
         options.y_ticks = [0 y_lim(end)];
     end
 
+    f1_ticks.x
+
     % Now format
     axes_data = improve_axes( ...
+        x_ticks = [f1_ticks.x(1)-0.5 f1_ticks.x(end)+0.5], ...
         x_tick_label_positions = f1_ticks.x, ...
         x_tick_labels = strrep(f1_ticks.labels, '_', ' '), ...
         x_tick_label_rotation = options.f1_label_rotation, ...
@@ -290,6 +306,8 @@ function fig_jitter(t, data_label, f1_label, options)
         x_axis_label =  "", ...
         y_axis_label = data_label, ...
         y_ticks = options.y_ticks, ...
+        y_label_rotation = options.y_label_rotation, ...
+        y_label_offset = options.y_label_offset, ...
         title = options.title_string, ...
         title_font_size = options.title_font_size, ...
         title_y_offset = options.title_rel_y_pos, ...
