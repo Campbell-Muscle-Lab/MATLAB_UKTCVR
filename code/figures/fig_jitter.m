@@ -48,7 +48,7 @@ function fig_jitter(t, data_label, f1_label, options)
 
         options.y_label (1,:) string = []
         options.y_label_rotation (1,1) double = 0
-        options.y_label_offset (1,1) double = []
+        options.y_label_offset (1,1) double = -0.25
         options.y_label_font_size (1,1) double = 12
 
         options.y_tick_font_size (1,1) double = 12
