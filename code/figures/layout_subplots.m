@@ -22,10 +22,11 @@ function subplots = layout_subplots(options);
         options.padding_top_adjustments (1,:) = 0
         options.padding_bottom_adjustments (1,:) = 0
         options.omit_subplots = NaN
+        options.panel_label (1,1) logical = true
         options.panel_label_font_size (1,1) double = 12
         options.panel_label_font_name (1,1) string = "Helvetica"
         options.panel_label_font_weight (1,1) string = "Bold"
-        options.panel_labels (1,:) string = ""
+        options.panel_label_strings (1,:) string = ""
     end
 
     % Set some defaults
@@ -43,9 +44,9 @@ function subplots = layout_subplots(options);
     % If there is more than one panel, we should prepare to add
     % panel labels
     if (no_of_panels > 1)
-        if (all(options.panel_labels == ""))
+        if (options.panel_label) & (all(options.panel_label_strings == ""))
             for i = 1 : no_of_panels
-                options.panel_labels(i) = string(sprintf('%s', i+64));
+                options.panel_label_strings(i) = string(sprintf('%s', i+64));
             end
         end
     end
@@ -114,6 +115,7 @@ function subplots = layout_subplots(options);
             % Now we know the dimensions, we can make the figure
             options.figure_handle = figure(options.figure_handle);
             clf;
+            old_fig_units = get(options.figure_handle, 'Units');
             set(options.figure_handle, 'Units', 'inches', 'PaperType', 'usletter');
             set(options.figure_handle, 'Position', ...
                 [options.left_margin ...
@@ -156,13 +158,13 @@ function subplots = layout_subplots(options);
             hold on;
 
             % Add the label if required
-            if (options.panel_labels(subplot_counter) ~= "")
+            if (options.panel_label) & (options.panel_label_strings(subplot_counter) ~= "")
 
                 x_label = -options.padding_left(subplot_counter);
                 y_label = axis_height + options.padding_top(subplot_counter);
 
                 text(x_label, y_label, ...
-                        options.panel_labels(subplot_counter), ...
+                        options.panel_label_strings(subplot_counter), ...
                         Units = 'inches', ...
                         HorizontalAlignment = 'left', ...
                         VerticalAlignment = 'top', ...
@@ -171,6 +173,9 @@ function subplots = layout_subplots(options);
                         FontWeight = options.panel_label_font_weight);
             end
 
+            % Reset data
+            set(gca, "Units", "normalized");
+            
             % Increment counter
             subplot_counter = subplot_counter + 1;
 
@@ -178,7 +183,7 @@ function subplots = layout_subplots(options);
     end
 
     % Restore defaults
-    set(options.figure_handle,'PaperUnits','inches')
+    set(options.figure_handle,'Units', 'pixels')
 
 end
 

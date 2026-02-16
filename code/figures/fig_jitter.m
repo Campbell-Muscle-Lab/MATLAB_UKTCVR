@@ -29,6 +29,7 @@ function fig_jitter(t, data_label, f1_label, options)
 
         options.draw_y_from_zero = false
         options.y_ticks (:,:) double = []
+        options.y_tick_decimal_places (1,1) double = 3
 
         options.super_plot logical = true
         options.super_plot_size_offset double = 60;
@@ -50,13 +51,14 @@ function fig_jitter(t, data_label, f1_label, options)
         options.y_label_rotation (1,1) double = 0
         options.y_label_offset (1,1) double = -0.25
         options.y_label_font_size (1,1) double = 12
+        options.y_label_text_interpreter (1,1) string = "tex"
 
         options.y_tick_font_size (1,1) double = 12
         
         options.title_string (1,1) string = ""
         options.title_font_size = 12
         options.title_rel_y_pos (1,1) double = 1.7
-        options.title_text_interpreter (1,1) = "tex"
+        options.title_text_interpreter (1,1) string = "tex"
 
         options.post_hoc_table (:,:) table = []
         options.post_hoc_font_size (1,1) double = 10
@@ -99,9 +101,6 @@ function fig_jitter(t, data_label, f1_label, options)
             grouping_label = options.grouping_label, ...
             f1_values = options.f1_values, ...
             f2_values = options.f2_values);
-
-    jd.points
-    jd.f1_values
 
     % Work out number of f1 and f2 categories
     no_of_f1_cats = 0;
@@ -313,8 +312,10 @@ function fig_jitter(t, data_label, f1_label, options)
         x_axis_label =  "", ...
         y_axis_label = options.y_label, ...
         y_ticks = options.y_ticks, ...
+        y_tick_decimal_places = options.y_tick_decimal_places, ...
         y_label_rotation = options.y_label_rotation, ...
         y_label_offset = options.y_label_offset, ...
+        y_label_text_interpreter = options.y_label_text_interpreter, ...
         tick_font_size = options.y_tick_font_size, ...
         label_font_size = options.y_label_font_size, ...
         title = options.title_string, ...
