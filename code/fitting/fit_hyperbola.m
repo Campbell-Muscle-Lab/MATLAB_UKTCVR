@@ -64,6 +64,7 @@ r_squared=calculate_r_squared(params.y_data,y_fit);
 x_fit = params.x_fit;
 
 % Calculate fit curve
+y_fit=[];
 for i=1:length(x_fit)
     y_fit(i)=(((x0+a).*b)./(x_fit(i)+a))-b;
 end
