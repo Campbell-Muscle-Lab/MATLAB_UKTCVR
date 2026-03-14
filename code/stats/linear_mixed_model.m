@@ -88,9 +88,9 @@ function stats = linear_mixed_model(t, data_label, f1_label, options);
             d_m = designMatrix(lin_mix_mod_ref);
             d_un = unique(d_m, 'rows');
             for i = 1 : size(d_un, 1)
-                [~, ia, ib] = intersect(d_m, d_un(i,:), 'rows');
-                d_vn1(i) = t.(f1_label)(ia);
-                d_vn2(i) = t.(options.f2_label)(ia);
+                [~, ia, ib] = intersect(d_m, d_un(i,:), 'rows')
+                d_vn1(i) = t.(f1_label)(ia)
+                d_vn2(i) = t.(options.f2_label)(ia)
             end
 
             % Find the design matrices for each combination;
