@@ -302,6 +302,19 @@ function fig_jitter(t, data_label, f1_label, options)
     % Do some formatting
     if (isempty(options.y_label))
         options.y_label = data_label;
+    else
+        ri = regexp(options.y_label, '\\n');
+        if (numel(ri) > 0)
+            start_ind = 1;
+            for j = 1 : numel(ri)
+                bits{j} = char(extractBetween( ...
+                    options.y_label, start_ind , ri(j)-2));
+                start_ind = ri(j)+2;
+            end
+            bits{numel(ri)+1} = char(extractBetween( ...
+                options.y_label, start_ind, strlength(options.y_label)));
+            options.y_label = bits;
+        end
     end
 
     % Now format

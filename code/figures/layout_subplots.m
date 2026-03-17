@@ -1,4 +1,4 @@
-function subplots = layout_subplots(options);
+function [subplots, options] = layout_subplots(options);
 % Function creates a reproducible panel layout
 
     arguments

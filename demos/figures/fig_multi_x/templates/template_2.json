@@ -1,0 +1,62 @@
+{
+    "layout":
+    {
+        "fig_width": 7,
+        "padding_left": 1,
+        "padding_right": 1,
+        "padding_top": [0.2, 0.05],
+        "padding_bottom": [0.05, 0.5],
+        "x_to_y_ratio": 1
+    },
+    "x_display":{
+        "global_x_field": "time",
+        "label": "Time (s)"
+    },
+    "formatting":
+    {
+        "label_font_size": 9,
+        "x_axis_offset": 0.1,
+        "x_label_offset": -0.45,
+        "x_tick_length": 0.1,
+        "x_tick_label_vertical_offset": -0.12,
+        "y_axis_offset": 0.2,
+        "y_label_offset": -0.75,
+        "y_tick_length": 0.1,
+        "y_tick_label_horizontal_offset": -0.16,
+        "tick_font_size": 9,
+        "legend_font_size": 7,
+        "legend_alignment": "top_left",
+        "legend_position": [1.2, 1.0]        
+    },
+    "panels":
+    [
+        {
+            "column": 1,
+            "y_info":
+            {
+                "label": "Stress\n(kN^{-2})",
+                "series":
+                [
+                    
+                    {
+                        "field": "m_force"
+                    }
+                ]
+            }
+        },
+        {
+            "column": 2,
+            "y_info":
+            {
+                "label": "Half-\nsarcomere\nlength\n(nm)",
+                "series":
+                [
+                    
+                    {
+                        "field": "hs_1_length"
+                    }
+                ]
+            }
+        }
+    ]
+}

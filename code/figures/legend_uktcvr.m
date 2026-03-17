@@ -36,5 +36,5 @@ if (~isempty(options.legend_position))
 
     end
 
-    h_leg.Position = [left bot width height]
+    h_leg.Position = [left bot width height];
 end

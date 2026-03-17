@@ -2,24 +2,26 @@ function sub_folders = return_sub_folders(folder_name)
 % Returns the sub_folders
 
 if (nargin==1)
-    listing = dir(folder_name);
+    all_values = dir(folder_name);
 else
     folder_name = cd;
-    listing = dir;
+    all_values = dir;
 end
 
-listing = listing(~ismember({listing.name},{'.','..'}));
-sub_folders = [""];
-i=1;
-counter=0;
-while (i<=numel(listing))
-    check_name = fullfile(folder_name,listing(i).name);
-    if (isfolder(check_name))
-        counter=counter+1;
-        sub_folders(counter) = check_name;
+% Restrict to folders
+sub_folders = [];
+for i = 1 : numel(all_values)
+    if (~startsWith(all_values(i).name, '.'))
+        test_string = ...
+            string(fullfile(all_values(i).folder, ...
+                all_values(i).name));
+        if (isdir(test_string))
+            sub_folders = [sub_folders ; test_string];
+        end
     end
-    i=i+1;
 end
+
+sub_folders = sort_nat(sub_folders);
 
 
     
