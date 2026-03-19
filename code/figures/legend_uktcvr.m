@@ -1,4 +1,4 @@
-function legend_uktcvr(h_plot, h_label, options)
+function h = legend_uktcvr(h_plot, h_label, options)
 % Adds a legend with some options
 
 arguments
@@ -9,6 +9,7 @@ arguments
     options.IconColumnWidth = 30
     options.legend_alignment = "top_left"
     options.legend_position = []
+    options.legend_vertical_scale = [];
 
 end
 
@@ -37,4 +38,9 @@ if (~isempty(options.legend_position))
     end
 
     h_leg.Position = [left bot width height];
+end
+
+if (~isempty(options.legend_vertical_scale))
+    % Adjust height of box
+    h_leg.Position(4) = h_leg.Position(4) * options.legend_vertical_scale;
 end
