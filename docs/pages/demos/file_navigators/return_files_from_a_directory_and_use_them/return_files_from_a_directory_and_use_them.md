@@ -34,7 +34,7 @@ end
 
 Generated files are stored under the specified folder:
 
-![generated_files](../../../../../demos/file_navigators/return_files_from_a_directory/media/generated_files.png)
+![generated_files](media/generated_files.png)
 
 
 ```matlab
@@ -45,11 +45,11 @@ file_list = return_files_from_a_directory
 
 First, a dialog box appears and prompts user to input the extension of the files of interest.
 
-![extension_dialog](../../../../../demos/file_navigators/return_files_from_a_directory/media/file_extension_dialog.png)
+![extension_dialog](media/file_extension_dialog.png)
 
 Then, select your folder;
 
-![folder_dialog](../../../../../demos/file_navigators/return_files_from_a_directory/media/folder_dialog.png)
+![folder_dialog](media/folder_dialog.png)
 
 The return_files_from_a_directory function returns the list of all the files with entered extension.
 
