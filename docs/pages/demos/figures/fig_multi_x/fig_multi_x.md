@@ -9,7 +9,7 @@ nav_order: 3
 
 # Fig_multi_x
 
-[`fig_multi_x.m`](../../../code/figures/fig_multi_x/fig_multi_x.html) creates a figure that shows one or more columns of a table plotted against another column. The formatting and arrangement of the figure is defined in a separate file provided by the user in JSON format.
+[`figure_multi_x.m`](../../../code/figures/fig_multi_x/fig_multi_x.html) creates a figure that shows one or more columns of a table plotted against another column. The formatting and arrangement of the figure is defined in a separate file provided by the user in JSON format.
 
 ### Source
 
