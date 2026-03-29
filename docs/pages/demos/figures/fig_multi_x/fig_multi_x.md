@@ -295,7 +295,7 @@ figure_multi_x(single_data_file, template_file_4)
 
 ![figure_4](./images/figure_4.png)
 
-### Putting it all together
+### Plotting a multi panel results for a publication
 
 With this:
 + [data file](../../../../../demos/figures/fig_multi_x/data/sim_output.txt)
