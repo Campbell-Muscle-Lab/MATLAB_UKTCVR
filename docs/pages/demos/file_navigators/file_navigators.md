@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Figures
-nav_order: 10
+title: File Navigators
+nav_order: 60
 parent: Demos
 has_children: True
 ---
