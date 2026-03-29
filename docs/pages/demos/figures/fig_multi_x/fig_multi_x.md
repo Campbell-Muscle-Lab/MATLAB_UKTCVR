@@ -57,7 +57,7 @@ t = struct with fields:
         panels: [1x1 struct]
 ```
 
-[Link to the template file](../../../../../demos/figures/figure_multi_x/templates/template_1.json)
+[Link to the template 1 file](../../../../../demos/figures/fig_multi_x/templates/template_1.json)
 
 
 
@@ -112,16 +112,16 @@ t = struct with fields:
 }
 ```
 
-### Simplest figure
+### A single panel figure
 
 ```matlab
 % Create a figure
 figure_multi_x(single_data_file, template_file_1)
 ```
 
-<img src = "images/figure_0.png" width="50%" alt="Figure">
+![figure_0](./images/figure_0.png)
 
-### Plot data from multiple files
+### Plot data from multiple files on a single panel
 
 ```matlab
 % Plot three tables with the same format
@@ -133,7 +133,7 @@ multiple_data_files = [ ...
 figure_multi_x(multiple_data_files, template_file_1)
 ```
 
-<img src = "images/figure_1.png" width="50%" alt="Figure">
+![figure_1](./images/figure_1.png)
 
 
 ### Plot multiple panels
@@ -146,7 +146,7 @@ template_file_2 = "templates/template_2.json";
 figure_multi_x(single_data_file, template_file_2)
 ```
 
-[Link to the template file](../../../../../demos/figures/figure_multi_x/templates/template_2.json)
+[Link to the template 2 file](../../../../../demos/figures/fig_multi_x/templates/template_2.json)
 
 ```
 {
@@ -184,11 +184,13 @@ figure_multi_x(single_data_file, template_file_2)
 }
 ```
 
-<img src = "images/figure_2.png" width="50%" alt="Figure">
+![figure_2](./images/figure_2.png)
 
 ### Plot multiple rows
 
 Add another panel to column 2 by inserting a new element with the appropriate column label. Only the bottom panel in each column shows the x axis.
+
+[Link to the template 3 file](../../../../../demos/figures/fig_multi_x/templates/template_3.json)
 
 ```matlab
 template_file_3 = "templates/template_3.json";
@@ -246,11 +248,13 @@ figure_multi_x(single_data_file, template_file_3)
 }
 ```
 
-<img src = "images/figure_3.png" width="50%" alt="Figure">
+![figure_3](./images/figure_3.png)
 
 ### Plot multiple traces from the same data file
 
 Each panel can show more than one trace. If a `field_label` is provided, a legend will be added to the panel.
+
+[Link to the template 4 file](../../../../../demos/figures/fig_multi_x/templates/template_4.json)
 
 ```matlab
 template_file_4 = "templates/template_4.json";
@@ -289,18 +293,16 @@ figure_multi_x(single_data_file, template_file_4)
 }
 ```
 
-<img src = "images/figure_4.png" width="50%" alt="Figure">
+![figure_4](./images/figure_4.png)
 
 ### Putting it all together
 
 With this:
-+ [data file](../../../demos/figures/fig_multi_x/data/sim_output.txt)
-+ [template file](../../../demos/figures/fig_multi_x/data/template_example_growth.json)
++ [data file](../../../../../demos/figures/fig_multi_x/data/sim_output.txt)
++ [template file](../../../../../demos/figures/fig_multi_x/data/template_example_growth.json)
 
 ```
 figure_multi_x(data_file, template_file)
 ```
 
-generates
-
-<img src = "images/fig_example_growth.png" width="50%" alt="Figure">
+![figure_example_growth](./images/fig_example_growth.png)
