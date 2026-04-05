@@ -98,7 +98,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
     
         % Now load data
         d = readtable(data_file_strings(file_i));
-        dn = d.Properties.VariableNames';
+        dn = d.Properties.VariableNames'
 
         if (~isempty(options.data_file_filters))
             for filter_i = 1 : numel(options.data_file_filters)

@@ -17,6 +17,7 @@ function [subplots, options] = layout_subplots(options);
         options.padding_right (1,:) double = 0.25
         options.right_margin (1,1) double = NaN
         options.x_to_y_ratio (1,1) double = 1
+        options.relative_row_heights (1,:) double = NaN
         options.padding_left_adjustments (1,:) = 0
         options.padding_right_adjustments (1,:) = 0
         options.padding_top_adjustments (1,:) = 0
@@ -49,6 +50,11 @@ function [subplots, options] = layout_subplots(options);
                 options.panel_label_strings(i) = string(sprintf('%s', i+64));
             end
         end
+    end
+
+    % Set the relative row heights
+    if (isnan(options.relative_row_heights))
+        options.relative_row_heights = ones(1, options.panels_high);
     end
 
     % Goal is to come up with arrays that are no_of_panels long for
@@ -106,7 +112,8 @@ function [subplots, options] = layout_subplots(options);
             % Calculate the figure_height off the first col
             first_col_indices = 1:options.panels_wide:no_of_panels;
             
-            options.figure_height = (options.panels_high * axis_height) + ...
+            options.figure_height = ...
+                (sum(options.relative_row_heights) * axis_height) + ...
                 sum(options.padding_top(first_col_indices)) + ...
                 sum(options.padding_top_adjustments(first_col_indices)) + ...
                 sum(options.padding_bottom(first_col_indices)) - ...
@@ -141,13 +148,21 @@ function [subplots, options] = layout_subplots(options);
             rhs(subplot_counter) = lhs(subplot_counter) + axis_width + ...
                 options.padding_right_adjustments(row_indices(col));
 
+            if (row > 1)
+                row_offset = ...
+                    sum(options.relative_row_heights(1 : (row-1))) * ...
+                        axis_height;
+            else
+                row_offset = 0;
+            end
+
             top(subplot_counter) = options.figure_height - ...
                 sum(options.padding_top(first_col_indices(1:row))) - ...
                 sum(options.padding_bottom(first_col_indices(1:(row-1)))) - ...
-                ((row-1) * axis_height);
+                row_offset;
 
             bottom(subplot_counter) = top(subplot_counter) - ...
-                axis_height;
+                options.relative_row_heights(row) * axis_height;
 
             l = lhs(subplot_counter) / options.figure_width;
             b = bottom(subplot_counter) / options.figure_height;
