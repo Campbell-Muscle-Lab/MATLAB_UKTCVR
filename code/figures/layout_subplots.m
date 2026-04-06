@@ -176,7 +176,8 @@ function [subplots, options] = layout_subplots(options);
             if (options.panel_label) & (options.panel_label_strings(subplot_counter) ~= "")
 
                 x_label = -options.padding_left(subplot_counter);
-                y_label = axis_height + options.padding_top(subplot_counter);
+                y_label = (options.relative_row_heights(row) * axis_height) + ...
+                    options.padding_top(subplot_counter);
 
                 text(x_label, y_label, ...
                         options.panel_label_strings(subplot_counter), ...
