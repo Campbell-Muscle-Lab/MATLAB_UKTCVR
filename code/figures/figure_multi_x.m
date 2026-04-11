@@ -38,7 +38,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
         options.box_fill_alpha (1,1) = 0.5
         
         options.vline_style (1,1) = "--"
-        options.vline_width (1,1) = 1
+        options.vline_width (1,1) = 1.5
         options.vline_color (1,3) = 0.5 * ones(1,3)
     end
 
@@ -539,8 +539,8 @@ function handle_annotations(template, subplots, ax_data, ...
                     end
 
                 case "vline"
-                    x = an.x_coord
-                    y = ax_data(plot_index).y_ticks;
+                    x = an.x_coord;
+                    y = ax_data(plot_index).y_ticks([1 end]);
                     p = plot(x * [1 1], y, ...
                         Color = options.vline_color, ...
                         LineStyle = options.vline_style, ...
@@ -565,7 +565,7 @@ function handle_annotations(template, subplots, ax_data, ...
                     end
 
                 case "text"
-                    x = an.x_coord
+                    x = an.x_coord;
                     y = ax_data(plot_index).y_ticks;
 
                     if (isfield(an, "label"))

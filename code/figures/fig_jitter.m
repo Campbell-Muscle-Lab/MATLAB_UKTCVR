@@ -14,6 +14,8 @@ function fig_jitter(t, data_label, f1_label, options)
 
         options.figure_handle (1,1) double = 1
         options.subplot_handle (1,1) double = 0
+
+        options.calculate_statistics = false
         
         options.f1_spacing = 1
         options.f2_spacing = 1
@@ -26,6 +28,7 @@ function fig_jitter(t, data_label, f1_label, options)
         options.alpha = 0.1
         options.XJitterWidth = 0.5
         options.edge_width = 0.5
+        options.edge_alpha = 1
         options.edge_brightening = -0.5
 
         options.draw_y_from_zero = false
@@ -102,14 +105,18 @@ function fig_jitter(t, data_label, f1_label, options)
             f1_values = options.f1_values, ...
             f2_values = options.f2_values);
 
-    jd.points
-    jd.f1_values
-
     % Work out number of f1 and f2 categories
     no_of_f1_cats = 0;
     no_of_f2_cats = numel(jd);
     for f2 = 1 : no_of_f2_cats
         no_of_f1_cats = max([no_of_f1_cats numel(jd(f2).points)]);
+    end
+
+    % Run statistics
+    if (options.calculate_statistics)
+        stats = linear_mixed_model(t, data_label, f1_label, ...
+            f2_label = options.f2_label, ...
+            grouping_label = options.grouping_label);
     end
 
     % Create matrices for swarm plot, building up labels as we go
@@ -237,7 +244,8 @@ function fig_jitter(t, data_label, f1_label, options)
                     LineWidth = options.edge_width, ...
                     XJitter = 'density', ...
                     XJitterWidth = options.XJitterWidth, ...
-                    MarkerFaceAlpha = options.alpha);
+                    MarkerFaceAlpha = options.alpha, ...
+                    MarkerEdgeAlpha = options.edge_alpha);
             end
 
             if (options.super_plot)
@@ -316,6 +324,11 @@ function fig_jitter(t, data_label, f1_label, options)
             options.y_label = bits;
         end
     end
+    
+    % Overwrite title_string if calculating stats
+    if (options.calculate_statistics)
+        options.title_string = stats.main_effects_string;
+    end
 
     % Now format
     axes_data = improve_axes( ...
@@ -347,8 +360,14 @@ function fig_jitter(t, data_label, f1_label, options)
                 FontSize = options.f2_font_size);
     end
 
+    % Overwrite statistics of required
+    if (options.calculate_statistics)
+        options.post_hoc_table = stats.post_hoc;
+    end
+
     % Finally, add in the post_hoc effects
     if (~isempty(options.post_hoc_table))
+
         pht = options.post_hoc_table;
 
         % Find signifcant entries
