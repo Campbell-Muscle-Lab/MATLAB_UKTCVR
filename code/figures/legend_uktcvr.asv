@@ -11,7 +11,6 @@ arguments
     options.legend_position = []
     options.legend_vertical_scale = [];
     options.legend_title = ""
-    options.legend_font_weight = "normal"
 
 end
 
@@ -20,10 +19,9 @@ h_leg = legend(h_plot, h_label, ...
             IconColumnWidth = options.IconColumnWidth, ...
             Location = 'northeast');
 
-% Add title if required
+% Add ti
 if (options.legend_title ~= "")
-    title(h_leg, options.legend_title, ...
-            FontWeight = options.legend_font_weight);
+    title(h_leg, legend_title);
 end
 
 if (~isempty(options.legend_position))

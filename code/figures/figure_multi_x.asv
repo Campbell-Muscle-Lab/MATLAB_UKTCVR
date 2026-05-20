@@ -9,7 +9,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
 
         options.max_points_per_trace (1,1) = 5000
 
-        options.envelope_no_of_bins = 50
+        options.envelope_no_of_bins (1,1) = 25
         options.envelope_face_alpha = 0.25
         options.envelope_edge_alpha = 0.75
 
@@ -201,7 +201,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
                             x_lim = series_data(series_i).x_limits;
                             ti = [find(x_all >= x_lim(1), 1, 'first') ...
                                     find(x_all <= x_lim(end), 1, 'last')];
-                            x_ref = x_all(ti);
+                            x_ref = x
                         end
                         y_ref = series_data(series_i).reference * [1 1];
 
@@ -220,8 +220,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
 
                     case 'envelope'
                         [x_env, y_env] = return_envelope( ...
-                            x_all(line_ti), y(line_ti), ...
-                            formatting.envelope_no_of_bins, options);
+                            x_all(line_ti), y(line_ti), options);
 
                         h_leg(panel_i).trace(file_i, series_i) = ...
                             patch(x_env, y_env, formatting.color, ...
@@ -415,8 +414,7 @@ function formatting = return_formatting(series_data, series_i, ...
         'y_label_offset', 'y_tick_length', 'y_tick_label_horizontal_offset', ...
         'trace_line_style', 'trace_line_width', ...
         'legend_font_size', 'legend_icon_col_width', ...
-        'legend_alignment', 'legend_position', ...
-        'envelope_no_of_bins'};
+        'legend_alignment', 'legend_position'};
     for i = 1 : numel(style_fields)
         formatting.(style_fields{i}) = return_field_value(style_fields{i});
     end
@@ -452,19 +450,18 @@ function formatting = return_formatting(series_data, series_i, ...
         end
 end
 
-function [x_env, y_env] = return_envelope(x_all, y_all, ...
-    envelope_no_of_bins, options)
+function [x_env, y_env] = return_envelope(x_all, y_all, options)
 % Returns x and y coordinates for a patch
 
 % Work out the x limits
 x_min = min(x_all);
 x_max = max(x_all);
 
-x_bins = NaN * ones(envelope_no_of_bins, 1);
-y_top = NaN * ones(envelope_no_of_bins, 1);
-y_bottom = NaN * ones(envelope_no_of_bins, 1);
+x_bins = NaN * ones(options.envelope_no_of_bins, 1);
+y_top = NaN * ones(options.envelope_no_of_bins, 1);
+y_bottom = NaN * ones(options.envelope_no_of_bins, 1);
 
-x_edges = linspace(x_min, x_max, (envelope_no_of_bins+1));
+x_edges = linspace(x_min, x_max, (options.envelope_no_of_bins+1));
 for bin_i = 1 : numel(x_bins)
     vi = find( (x_all >= x_edges(bin_i)) & (x_all <= x_edges(bin_i+1)) );
     if (~isempty(vi))
