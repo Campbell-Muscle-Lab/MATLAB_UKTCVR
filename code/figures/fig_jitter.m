@@ -148,10 +148,6 @@ function fig_jitter(t, data_label, f1_label, options)
         for f1_i = 1 : no_of_f1_cats
             try
                 y_temp = jd(f2_i).points{f1_i};
-            % catch
-            %     x_anchor = x_anchor + 1
-            %     continue;
-            % end
                 x = [x ; x_anchor * ones(numel(y_temp), 1)];
                 y = [y ; y_temp];
                 if (options.grouping_label ~= "")
@@ -301,10 +297,18 @@ function fig_jitter(t, data_label, f1_label, options)
     end
 
     % Work out whether we want to draw y-axis from 0
-    if (isempty(options.y_ticks)) && ...
-            ((options.draw_y_from_zero) || (min(y) < (0.8 * max(y))))
-        y_lim = ylim;
-        options.y_ticks = [0 y_lim(end)];
+    % if (isempty(options.y_ticks)) && ...
+    %         ((options.draw_y_from_zero) || (min(y) < (0.8 * max(y))))
+    %     y_lim = ylim;
+    %     options.y_ticks = [0 y_lim(end)];
+
+    % end
+    if (isempty(options.y_ticks))
+        [options.y_ticks, y_tick_labels] = return_neat_ticks(y);
+        y_tick_label_positions = options.y_ticks;
+    else
+        y_tick_labels = [];
+        y_tick_label_positions = [];
     end
 
     % Do some formatting
@@ -341,6 +345,8 @@ function fig_jitter(t, data_label, f1_label, options)
         x_axis_label =  "", ...
         y_axis_label = options.y_label, ...
         y_ticks = options.y_ticks, ...
+        y_tick_labels = y_tick_labels, ...
+        y_tick_label_positions = y_tick_label_positions, ...
         y_tick_decimal_places = options.y_tick_decimal_places, ...
         y_label_rotation = options.y_label_rotation, ...
         y_label_offset = options.y_label_offset, ...
