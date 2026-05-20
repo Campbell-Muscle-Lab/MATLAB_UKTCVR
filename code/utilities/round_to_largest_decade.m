@@ -1,5 +1,10 @@
-function x = round_to_larger_decade(x)
+function x = round_to_largest_decade(x)
 % Returns value rounded to the decade larger
 
-p = ceil(log10(x));
-x = 10.^p;
+if (x > 0)
+    p = ceil(log10(x));
+    x = 10.^p;
+else
+    p = ceil(log10(-x));
+    x = -10.^p;
+end

@@ -7,6 +7,7 @@ arguments
 
     options.omit_NaNs (1,:) logical = true
     options.no_of_fit_points (1,1) double = 100
+    options.x_fit (:,:) double = [];
 
     options.confidence_level (1,1) double = 0.95
 
@@ -30,7 +31,6 @@ arguments
     options.regression_line_color_index (1,1) double = 4;
     options.regression_line_width (1,1) double = 1
     options.regression_line_style (1,1) string = "--"
-
 
     options.title_string (1,:) string = ""
     options.title_font_size (1,1) double = 10
@@ -74,7 +74,11 @@ end
     (1-options.confidence_level));
 
 % Calculate stuff about the fit
-x_fit = linspace(min(x), max(x), options.no_of_fit_points);
+if (isempty(options.x_fit))
+    x_fit = linspace(min(x), max(x), options.no_of_fit_points);
+else
+    x_fit = options.x_fit;
+end
 y_fit = b(2) * x_fit' + b(1);
 r_matrix = corrcoef(x',y');
 
@@ -114,10 +118,16 @@ out.y_confidence=y_confidence;
 out.y_regression=y_regression;
 out.p=stats(3);
 out.r=r_matrix(1,2);
-out.title_string=sprintf( ...
-        'y = %.5g*x + %.5g\nr=%.5g\np=%.5g', ...
-        out.slope,out.intercept,out.r,out.p);
 
+% Now generate title
+if (out.p < 0.001)
+    p_string = 'p < 0.001';
+else
+    p_string = sprintf('p = %.3f', out.p);
+end
+out.title_string=sprintf( ...
+        'y = %.3g*x + %.3g\nr = %.3g\n%s', ...
+        out.slope,out.intercept,out.r, p_string);
 
 % Display if required
 if ((options.figure_handle>0) || (~isempty(options.subplot_handle)))
