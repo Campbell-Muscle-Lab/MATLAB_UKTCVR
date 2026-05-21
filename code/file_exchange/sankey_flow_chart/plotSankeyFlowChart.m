@@ -47,6 +47,12 @@ catch
     show_legend = true;
 end
 
+try
+    cat_labels_font_size = options.cat_labels_font_size;
+catch
+    cat_labels_font_size = 12;
+end
+
 
 if istable(data)
     input_data = nan(height(data),width(data));
@@ -152,7 +158,15 @@ for t = 1:n_layers
         else
             if show_cat_labels
                 if val > 0
-                    text(X(t), bars{t}(c)/2 + sum(bars{t}(1:c-1)) + (c-1)*gap, layer_cat_names{t}{c},'HorizontalAlignment','center','Color',text_color)
+                    temp = layer_cat_names{t}{c};
+                    ri = regexp(temp, ' ');
+                    if (numel(ri) > 0)
+                        temp = string(strsplit(temp, ' '))
+                    end
+                    text(X(t), bars{t}(c)/2 + sum(bars{t}(1:c-1)) + (c-1)*gap, ...
+                        temp, ...
+                        'HorizontalAlignment','center','Color',text_color, ...
+                        'FontSize', cat_labels_font_size)
                 end
             end
         end
