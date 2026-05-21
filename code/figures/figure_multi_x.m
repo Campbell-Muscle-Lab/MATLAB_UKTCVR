@@ -9,9 +9,13 @@ function figure_multi_x(data_file_strings, template_file_string, options)
 
         options.max_points_per_trace (1,1) = 5000
 
+        options.x_offset (1,:) = []
+
         options.envelope_no_of_bins = 50
         options.envelope_face_alpha = 0.25
         options.envelope_edge_alpha = 0.75
+
+        options.neat_ticks_y_max_decade_factor = 0.2
 
         options.output_file_string = ""
         options.output_file_types = ["png", "eps", "svg"]
@@ -20,7 +24,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
         options.figure_number (1,1) = 1
         options.figure_title (1,1) = ""
 
-        options.trace_color_map (:,3) = return_matplotlib_default_colors()
+        options.trace_color_map (:, 3, :) = return_matplotlib_default_colors()
         options.trace_line_width (1,1) = 1
         options.trace_line_style (1,1) = '-'
 
@@ -28,7 +32,9 @@ function figure_multi_x(data_file_strings, template_file_string, options)
         options.legend_icon_col_width (1,1) = 7
         options.legend_alignment (1,1) = "top_left"
         options.legend_position (1,2) = [1 1]
+        options.legend_vertical_scale (1,1) = 1.0
         options.legend_title (1,1) string = ""
+        options.legend_file_suffix (1,:) = ""
 
         options.annotation_font_size (1,1) = 9;
         options.annotation_font_color (1,3) = [0 0 0];
@@ -96,10 +102,18 @@ function figure_multi_x(data_file_strings, template_file_string, options)
 
     % Now loop through the data files
     for file_i = 1 : numel(data_file_strings)
+
+        % Adapt color_map to allow for multiple files
+        if (numel(size(options.trace_color_map)) == 2)
+            options.trace_color_map = resize( ...
+                options.trace_color_map, 2, ...
+                Dimension = 3, ...
+                Pattern = "circular");
+        end
     
         % Now load data
         d = readtable(data_file_strings(file_i));
-        dn = d.Properties.VariableNames'
+        dn = d.Properties.VariableNames';
 
         if (~isempty(options.data_file_filters))
             for filter_i = 1 : numel(options.data_file_filters)
@@ -109,6 +123,11 @@ function figure_multi_x(data_file_strings, template_file_string, options)
 
         % Pull off the x data
         x_all = d.(template.x_display.global_x_field);
+
+        % Apply offset if required
+        if (~isempty(options.x_offset))
+            x_all = x_all - options.x_offset(file_i);
+        end
 
         if (~isfield(template.x_display, 'ticks'))
             line_ti = 1 : numel(x_all);
@@ -150,6 +169,8 @@ function figure_multi_x(data_file_strings, template_file_string, options)
             series_data = template.panels(panel_i).y_info.series;
 
             % Prepare for a new plot
+            % Hold data to calculate ticks later on
+            ax_y_store{panel_i} = [];
     
             % Loop though the series
             for series_i = 1 : numel(series_data)
@@ -187,7 +208,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
 
                 % Now check formatting
                 formatting = return_formatting( ...
-                    series_data, series_i, ...
+                    series_data, series_i, file_i, ...
                     template.formatting, ...
                     options);
     
@@ -228,16 +249,28 @@ function figure_multi_x(data_file_strings, template_file_string, options)
                                     FaceAlpha = options.envelope_face_alpha, ...
                                     EdgeAlpha = options.envelope_edge_alpha, ...
                                     EdgeColor = formatting.color);
-
-
-                
                 end
-    
-                % Keep track of the labels
+
+                % Add to store
+                ax_y_store{panel_i} = [ax_y_store{panel_i} y(:)];
+
+                % Keep track of labels
+                % First check for suffix
+                if (options.legend_file_suffix(file_i) ~= "")
+                    label_string = options.legend_file_suffix(file_i);
+                else
+                    label_string = "";
+                end
+
                 if ( (isfield(series_data(series_i), 'field_label')) && ...
                         (~ismissing(series_data(series_i).field_label)) )
-                    h_leg(panel_i).label(file_i, series_i) = ...
+
+                    label_string = label_string + " " + ...
                         series_data(series_i).field_label;
+                end
+
+                if (label_string ~= "")
+                    h_leg(panel_i).label(file_i, series_i) = label_string;
                 end
 
                 % Handle the legend title
@@ -280,48 +313,30 @@ function figure_multi_x(data_file_strings, template_file_string, options)
             x_decimal_places = 0;
         end
 
-        % Check whether we have specific y_label requirements
         if (isfield(template.panels(panel_i).y_info, 'ticks'))
             y_ticks = template.panels(panel_i).y_info.ticks;
-        else
-            if (isfield(template.panels(panel_i).y_info, 'scaling_type'))
-                scaling_type = template.panels(panel_i).y_info.scaling_type;
-            else
-                scaling_type = "include_zero";
-            end
+            y_tick_labels = [];
 
-            switch scaling_type
-                case "include_zero"
-                    y_lim = ylim;
-                    y_ticks = [min([y_lim(1) 0]) max([y_lim(2) 0])];
-                otherwise
-                    y_ticks = ylim;
-            end
-
-            % Round
-            y_range = diff(y_ticks);
-            decade = round_to_largest_decade(y_range);
-            y_ticks = [multiple_less_than(y_ticks(1), 0.02 * decade) ...
-                multiple_greater_than(y_ticks(end), 0.02 * decade)];
-        end
-
-        if (isfield(template.panels(panel_i).y_info, 'decimal_places'))
-            y_decimal_places = template.panels(panel_i).y_info.decimal_places;
-        else
-            % Try to make a good guess
+            % Try to make a good guess for decimal places
             y_abs = max(abs(y_ticks));
             p10 = floor(log10(y_abs));
             if (p10 >= 1)
-                y_decimal_places = 0;
+                y_tick_decimal_places = 0;
             elseif ( (p10 >= 0) && (p10 < 1) )
-                y_decimal_places = 1;
+                y_tick_decimal_places = 1;
             else
-                y_decimal_places = abs(p10);
+                y_tick_decimal_places = abs(p10);
             end
+        else
+            [y_ticks, y_tick_labels] = ...
+                return_neat_ticks(ax_y_store{panel_i}, ...
+                    max_decade_factor = ...
+                        options.neat_ticks_y_max_decade_factor);
+            y_tick_decimal_places = 0;
         end
 
-        formatting = return_formatting(series_data, series_i, ...
-            template.formatting, options);
+        % formatting = return_formatting(series_data, series_i, ...
+        %     template.formatting, options);
 
         ax_data(plot_index) = improve_axes( ...
             'x_axis_offset', formatting.x_axis_offset, ...
@@ -336,9 +351,11 @@ function figure_multi_x(data_file_strings, template_file_string, options)
             'y_axis_label', template.panels(panel_i).y_info.label, ...
             'y_label_offset', formatting.y_label_offset, ...
             'y_ticks', y_ticks, ...
+            'y_tick_labels', y_tick_labels, ...
+            'y_tick_label_positions', y_ticks, ...
+            'y_tick_decimal_places', y_tick_decimal_places, ...
             'y_tick_length', formatting.y_tick_length, ...
             'y_tick_label_horizontal_offset', formatting.y_tick_label_horizontal_offset, ...
-            'y_tick_decimal_places', y_decimal_places, ...
             'label_font_size', formatting.label_font_size, ...
             'tick_font_size', formatting.tick_font_size);
 
@@ -347,11 +364,20 @@ function figure_multi_x(data_file_strings, template_file_string, options)
             labels = h_leg(panel_i).label;
             vi = find(~ismissing(labels));
             if (~isempty(vi))
+                if (numel(data_file_strings) > 1)
+                    r = numel(data_file_strings);
+                    c = numel(labels) / r;
+                    vi = reshape(vi, r, c)';
+                    vi = vi(:);
+                end
+
                 legend_uktcvr( ...
                     h_leg(panel_i).trace(vi), labels(vi), ...
                     legend_title = h_leg(panel_i).legend_title, ...
+                    legend_vertical_scale = formatting.legend_vertical_scale, ...
                     FontSize = formatting.legend_font_size, ...
                     IconColumnWidth = formatting.legend_icon_col_width, ...
+                    NumColumns = numel(data_file_strings), ...
                     legend_position = formatting.legend_position);
             end
         end
@@ -393,7 +419,7 @@ function figure_multi_x(data_file_strings, template_file_string, options)
 end
 
 % Helper functions
-function formatting = return_formatting(series_data, series_i, ...
+function formatting = return_formatting(series_data, series_i, file_i, ...
         template_formatting, options)
     % Returns formatting, where series takes priority over template formatting
     % If both are unspecified, use the local MATLAB options
@@ -416,6 +442,7 @@ function formatting = return_formatting(series_data, series_i, ...
         'trace_line_style', 'trace_line_width', ...
         'legend_font_size', 'legend_icon_col_width', ...
         'legend_alignment', 'legend_position', ...
+        "legend_vertical_scale", ...
         'envelope_no_of_bins'};
     for i = 1 : numel(style_fields)
         formatting.(style_fields{i}) = return_field_value(style_fields{i});
@@ -438,7 +465,7 @@ function formatting = return_formatting(series_data, series_i, ...
             if ( all(isempty(val)) || all(ismissing(val)) )
                 switch(test_field)
                     case 'color'
-                        val = options.trace_color_map(series_i, :);
+                        val = options.trace_color_map(series_i, :, file_i);
                     case 'style'
                         val = 'line';
                 end

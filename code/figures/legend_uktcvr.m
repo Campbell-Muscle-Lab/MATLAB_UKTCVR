@@ -7,6 +7,7 @@ arguments
 
     options.FontSize = 12
     options.IconColumnWidth = 30
+    options.NumColumns = 1
     options.legend_alignment = "top_left"
     options.legend_position = []
     options.legend_vertical_scale = [];
@@ -18,6 +19,7 @@ end
 h_leg = legend(h_plot, h_label, ...
             FontSize = options.FontSize, ...
             IconColumnWidth = options.IconColumnWidth, ...
+            NumColumns = options.NumColumns, ...
             Location = 'northeast');
 
 % Add title if required
@@ -50,4 +52,6 @@ end
 if (~isempty(options.legend_vertical_scale))
     % Adjust height of box
     h_leg.Position(4) = h_leg.Position(4) * options.legend_vertical_scale;
+    h_leg.Position(2) = options.legend_position(2) * sum(subplot_position([2 4])) - ...
+                    options.legend_vertical_scale * legend_position(4);
 end
