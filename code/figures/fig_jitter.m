@@ -66,9 +66,17 @@ function fig_jitter(t, data_label, f1_label, options)
         options.post_hoc_table (:,:) table = []
         options.post_hoc_font_size (1,1) double = 10
         options.post_hoc_rel_y_spacing (1,1) double = 0.15
+
+        options.omit_NaNs (1,1) logical = true
     end
 
     % Code
+
+    % Filter out any NaN data values
+    if (options.omit_NaNs)
+        bi = find(isnan(t.(data_label)));
+        t(bi,:) = [];
+    end
 
     % Set the color_map if necessary
     if (isempty(options.color_map))
@@ -266,7 +274,7 @@ function fig_jitter(t, data_label, f1_label, options)
             for ci = 1 : numel(unique_cols)
                 vi = find( (super_plot.symbol_index == unique_symb(si)) & ...
                         (super_plot.color_index == unique_cols(ci)) );
-    
+
                 swarmchart(super_plot.x(vi), super_plot.y(vi), ...
                     options.marker_size + options.super_plot_size_offset, ...
                     options.symbols(unique_symb(si)), ...
@@ -374,16 +382,16 @@ function fig_jitter(t, data_label, f1_label, options)
     % Finally, add in the post_hoc effects
     if (~isempty(options.post_hoc_table))
 
-        pht = options.post_hoc_table;
+        pht = options.post_hoc_table
 
-        % Find signifcant entries
+        % Find significant entries
         vi = find(pht.p_corrected < 0.05);
         for i = 1 : numel(vi)
             vi_a = find(f1_ticks.f1f2_labels == pht.varname_1(i));
             vi_b = find(f1_ticks.f1f2_labels == pht.varname_2(i));
 
-            pht.x1(i) = f1_ticks.x(vi_a);
-            pht.x2(i) = f1_ticks.x(vi_b);
+            pht.x1(i) = f1_ticks.x(vi_a)
+            pht.x2(i) = f1_ticks.x(vi_b)
         end
 
         stat_lines(pht, axes_data, ...

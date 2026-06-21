@@ -193,6 +193,8 @@ function figure_multi_x(data_file_strings, template_file_string, options)
                         switch (series_data(series_i).processing)
                             case 'sgolay'
                                 y = smoothdata(y, 'sgolay');
+                            case 'constrain_greater_than_0'
+                                y(y<0) = 0;
                         end
                     end
                 end

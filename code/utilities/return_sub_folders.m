@@ -2,7 +2,7 @@ function sub_folders = return_sub_folders(folder_name)
 % Returns the sub_folders
 
 if (nargin==1)
-    all_values = dir(folder_name);
+    all_values = dir(folder_name)
 else
     folder_name = cd;
     all_values = dir;

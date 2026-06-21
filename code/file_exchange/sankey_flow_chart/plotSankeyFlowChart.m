@@ -131,7 +131,10 @@ end
 %% Create the Figure
 % layers on horizontal axis:
 X = 0:n_layers-1;
-figure();
+
+figure(options.figure);
+clf
+
 y1_category_points=[];
 
 for t=1:n_layers-1
@@ -161,7 +164,7 @@ for t = 1:n_layers
                     temp = layer_cat_names{t}{c};
                     ri = regexp(temp, ' ');
                     if (numel(ri) > 0)
-                        temp = string(strsplit(temp, ' '))
+                        temp = string(strsplit(temp, ' '));
                     end
                     text(X(t), bars{t}(c)/2 + sum(bars{t}(1:c-1)) + (c-1)*gap, ...
                         temp, ...

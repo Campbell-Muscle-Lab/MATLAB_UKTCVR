@@ -9,9 +9,17 @@ function stats = linear_mixed_model(t, data_label, f1_label, options);
         options.figure_handle (1,1) double = 0
         options.subplot_handle (1,1) double = 0
 
+        options.omit_NaNs (1,1) logical = true
+
     end
 
     % Code
+
+    % Filter out any NaN data values
+    if (options.omit_NaNs)
+        bi = find(isnan(t.(data_label)));
+        t(bi, :) = [];
+    end
 
     % Start by defining the mode as "one_way", could be updated later
     model_mode = "one_way";
@@ -35,16 +43,23 @@ function stats = linear_mixed_model(t, data_label, f1_label, options);
         model_string = model_string + " + (1 | " + options.grouping_label + ")";
     end
 
+    % Prep the covariance pattern
+    if (options.grouping_label == "")
+        cov_pattern = "";
+    else
+        cov_pattern = "CompSym";
+    end
+
     % Get estimates of groups
     lin_mix_mod_ref = fitlme(t, model_string, ...
         FitMethod = "REML", ...
-        CovariancePattern = "CompSym", ...
+        CovariancePattern = cov_pattern, ...
         DummyVarCoding = "Reference");
 
     % Run the model
     lin_mix_mod_effects = fitlme(t, model_string, ...
         FitMethod = "REML", ...
-        CovariancePattern = "CompSym", ...
+        CovariancePattern = cov_pattern, ...
         DummyVarCoding = "Effects");
 
     % Set the main effects
