@@ -382,7 +382,7 @@ function fig_jitter(t, data_label, f1_label, options)
     % Finally, add in the post_hoc effects
     if (~isempty(options.post_hoc_table))
 
-        pht = options.post_hoc_table
+        pht = options.post_hoc_table;
 
         % Find significant entries
         vi = find(pht.p_corrected < 0.05);
@@ -390,8 +390,8 @@ function fig_jitter(t, data_label, f1_label, options)
             vi_a = find(f1_ticks.f1f2_labels == pht.varname_1(i));
             vi_b = find(f1_ticks.f1f2_labels == pht.varname_2(i));
 
-            pht.x1(i) = f1_ticks.x(vi_a)
-            pht.x2(i) = f1_ticks.x(vi_b)
+            pht.x1(i) = f1_ticks.x(vi_a);
+            pht.x2(i) = f1_ticks.x(vi_b);
         end
 
         stat_lines(pht, axes_data, ...
